@@ -1,0 +1,10 @@
+1;90001;Ana;Perez;ana.perez@mail.test;CERTIFICADO;2;Constancia de alumna regular;RESUELTA;1;2026-09-02
+2;90002;Bruno;Gimenez;bruno.gimenez@mail.test;EQUIVALENCIA;3;Equivalencia de Matematica I desde otra facultad;EN_PROCESO;2;2026-09-15
+3;90003;Carla;Mendez;carla.mendez@mail.test;REVISION_NOTA;1;Revision de nota del segundo parcial de Programacion II;PENDIENTE;0;2026-10-20
+4;90004;Diego;Fernandez;diego.fernandez@mail.test;BAJA;2;Baja de la materia Ingles II;RECHAZADA;4;2026-09-28
+5;90005;Elena;Castro;elena.castro@mail.test;CERTIFICADO;1;Certificado analitico parcial para tramite laboral;EN_PROCESO;1;2026-10-30
+6;90001;Ana;Perez;ana.perez@mail.test;REVISION_NOTA;3;Revision de nota del final de Base de Datos;RESUELTA;2;2026-10-05
+7;90006;Federico;Sosa;federico.sosa@mail.test;EQUIVALENCIA;2;Equivalencia de Sistemas Operativos;PENDIENTE;0;2026-11-03
+8;90007;Gabriela;Rios;gabriela.rios@mail.test;BAJA;1;Baja por superposicion horaria;PENDIENTE;0;2026-11-05
+9;90008;Hernan;Vega;hernan.vega@mail.test;CERTIFICADO;3;Constancia de examen para el trabajo;PENDIENTE;0;2026-11-06
+10;90003;Carla;Mendez;carla.mendez@mail.test;CERTIFICADO;2;Constancia de alumna regular para la obra social;EN_PROCESO;3;2026-10-10
