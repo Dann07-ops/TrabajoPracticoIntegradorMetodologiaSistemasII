@@ -51,7 +51,7 @@ public class Main {
                     }
                     System.out.print("Descripcion: ");
                     String descripcion = sc.nextLine();
-                    sistema.registrarSolicitud(nombre, apellido, legajo, email, tipo, prioridad, descripcion);
+                    sistema.registrarSolicitud(new DatosSolicitud(nombre, apellido, legajo, email, tipo, prioridad, descripcion));
                     break;
 
                 case 2:

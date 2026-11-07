@@ -33,35 +33,35 @@ public class SistemaSolicitudes {
     // ---------------------------------------------------------------
     // Registrar una solicitud nueva
     // ---------------------------------------------------------------
-    public int registrarSolicitud(String nombre, String apellido, String legajo, String email,
-                                  String tipo, int prioridad, String descripcion) {
-        if (!esEstudianteValido(nombre, apellido, legajo, email)) {
+    public int registrarSolicitud(DatosSolicitud datos) {
+        if (!esEstudianteValido(datos)) {
             return -1;
         }
-        if (!esSolicitudValida(tipo, prioridad, descripcion)) {
+        if (!esSolicitudValida(datos)) {
             return -1;
         }
 
-        Solicitud s = crearSolicitud(nombre, apellido, legajo, email, tipo, prioridad, descripcion);
+        Solicitud s = crearSolicitud(datos);
         agregarAlArchivo(s);
 
         System.out.println("Solicitud registrada con id " + s.getId());
         return s.getId();
     }
 
-    private boolean esEstudianteValido(String nombre, String apellido, String legajo, String email) {
-        if (nombre == null || nombre.trim().isEmpty()) {
+    private boolean esEstudianteValido(DatosSolicitud datos) {
+        if (datos.nombre() == null || datos.nombre().trim().isEmpty()) {
             System.out.println("Error: el nombre es obligatorio");
             return false;
         }
-        if (apellido == null || apellido.trim().isEmpty()) {
+        if (datos.apellido() == null || datos.apellido().trim().isEmpty()) {
             System.out.println("Error: el apellido es obligatorio");
             return false;
         }
-        if (legajo == null || legajo.trim().isEmpty()) {
+        if (datos.legajo() == null || datos.legajo().trim().isEmpty()) {
             System.out.println("Error: el legajo es obligatorio");
             return false;
         }
+        String email = datos.email();
         if (email == null || !email.contains("@") || !email.contains(".")) {
             System.out.println("Error: el email no es valido");
             return false;
@@ -69,16 +69,18 @@ public class SistemaSolicitudes {
         return true;
     }
 
-    private boolean esSolicitudValida(String tipo, int prioridad, String descripcion) {
+    private boolean esSolicitudValida(DatosSolicitud datos) {
+        String tipo = datos.tipo();
         if (tipo == null || (!tipo.equals("CERTIFICADO") && !tipo.equals("EQUIVALENCIA")
                 && !tipo.equals("REVISION_NOTA") && !tipo.equals("BAJA"))) {
             System.out.println("Error: tipo de solicitud invalido");
             return false;
         }
-        if (prioridad < 1 || prioridad > 3) {
+        if (datos.prioridad() < 1 || datos.prioridad() > 3) {
             System.out.println("Error: la prioridad debe ser 1, 2 o 3");
             return false;
         }
+        String descripcion = datos.descripcion();
         if (descripcion == null || descripcion.trim().isEmpty()) {
             System.out.println("Error: la descripcion es obligatoria");
             return false;
@@ -90,12 +92,12 @@ public class SistemaSolicitudes {
         return true;
     }
 
-    private Solicitud crearSolicitud(String nombre, String apellido, String legajo, String email,
-                                     String tipo, int prioridad, String descripcion) {
-        Estudiante e = new Estudiante(legajo.trim(), nombre.trim(), apellido.trim(), email.trim());
+    private Solicitud crearSolicitud(DatosSolicitud datos) {
+        Estudiante e = new Estudiante(datos.legajo().trim(), datos.nombre().trim(),
+                datos.apellido().trim(), datos.email().trim());
         ultimoId++;
-        Solicitud s = new Solicitud(ultimoId, e, tipo, prioridad, descripcion.trim(),
-                "PENDIENTE", null, LocalDate.now());
+        Solicitud s = new Solicitud(ultimoId, e, datos.tipo(), datos.prioridad(),
+                datos.descripcion().trim(), "PENDIENTE", null, LocalDate.now());
         lista.add(s);
         return s;
     }

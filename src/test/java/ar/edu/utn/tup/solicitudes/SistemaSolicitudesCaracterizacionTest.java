@@ -152,8 +152,8 @@ class SistemaSolicitudesCaracterizacionTest {
         String rutaImposible = carpeta.resolve("no-existe").resolve("solicitudes.csv").toString();
         SistemaSolicitudes conRutaImposible = new SistemaSolicitudes(rutaImposible);
 
-        int id = conRutaImposible.registrarSolicitud("Ana", "Perez", "90001", "ana.perez@mail.test",
-                "CERTIFICADO", 2, "desc");
+        int id = conRutaImposible.registrarSolicitud(
+                new DatosSolicitud("Ana", "Perez", "90001", "ana.perez@mail.test", "CERTIFICADO", 2, "desc"));
 
         assertEquals(1, id);                               // anuncia exito...
         assertFalse(Files.exists(Path.of(rutaImposible))); // ...pero no guardo nada
@@ -347,7 +347,7 @@ class SistemaSolicitudesCaracterizacionTest {
 
     private int registrar(String nombre, String apellido, String legajo, String email,
                           String tipo, int prioridad, String descripcion) {
-        return sistema.registrarSolicitud(nombre, apellido, legajo, email, tipo, prioridad, descripcion);
+        return sistema.registrarSolicitud(new DatosSolicitud(nombre, apellido, legajo, email, tipo, prioridad, descripcion));
     }
 
     private List<Solicitud> filtrar(String tipo, String estado, String legajo) {
