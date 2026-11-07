@@ -14,7 +14,7 @@
     <description>TPI Metodologia de Sistemas II - prototipo base para diagnostico y refactoring</description>
 
     <properties>
-        <!-- Se compila para Java 17 (LTS) aunque el JDK instalado sea el 23 -->
+        <!-- Se compila para Java 17 (LTS); el JDK instalado es el 21 -->
         <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.10.2</junit.version>
