@@ -35,50 +35,72 @@ public class SistemaSolicitudes {
     // ---------------------------------------------------------------
     public int registrarSolicitud(String nombre, String apellido, String legajo, String email,
                                   String tipo, int prioridad, String descripcion) {
-        // validar datos del estudiante
-        if (nombre == null || nombre.trim().isEmpty()) {
-            System.out.println("Error: el nombre es obligatorio");
+        if (!esEstudianteValido(nombre, apellido, legajo, email)) {
             return -1;
         }
-        if (apellido == null || apellido.trim().isEmpty()) {
-            System.out.println("Error: el apellido es obligatorio");
-            return -1;
-        }
-        if (legajo == null || legajo.trim().isEmpty()) {
-            System.out.println("Error: el legajo es obligatorio");
-            return -1;
-        }
-        if (email == null || !email.contains("@") || !email.contains(".")) {
-            System.out.println("Error: el email no es valido");
-            return -1;
-        }
-        // validar datos de la solicitud
-        if (tipo == null || (!tipo.equals("CERTIFICADO") && !tipo.equals("EQUIVALENCIA")
-                && !tipo.equals("REVISION_NOTA") && !tipo.equals("BAJA"))) {
-            System.out.println("Error: tipo de solicitud invalido");
-            return -1;
-        }
-        if (prioridad < 1 || prioridad > 3) {
-            System.out.println("Error: la prioridad debe ser 1, 2 o 3");
-            return -1;
-        }
-        if (descripcion == null || descripcion.trim().isEmpty()) {
-            System.out.println("Error: la descripcion es obligatoria");
-            return -1;
-        }
-        if (descripcion.length() > 200 || descripcion.contains(";")) {
-            System.out.println("Error: la descripcion es demasiado larga o contiene ';'");
+        if (!esSolicitudValida(tipo, prioridad, descripcion)) {
             return -1;
         }
 
-        // crear la solicitud
+        Solicitud s = crearSolicitud(nombre, apellido, legajo, email, tipo, prioridad, descripcion);
+        agregarAlArchivo(s);
+
+        System.out.println("Solicitud registrada con id " + s.getId());
+        return s.getId();
+    }
+
+    private boolean esEstudianteValido(String nombre, String apellido, String legajo, String email) {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            System.out.println("Error: el nombre es obligatorio");
+            return false;
+        }
+        if (apellido == null || apellido.trim().isEmpty()) {
+            System.out.println("Error: el apellido es obligatorio");
+            return false;
+        }
+        if (legajo == null || legajo.trim().isEmpty()) {
+            System.out.println("Error: el legajo es obligatorio");
+            return false;
+        }
+        if (email == null || !email.contains("@") || !email.contains(".")) {
+            System.out.println("Error: el email no es valido");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean esSolicitudValida(String tipo, int prioridad, String descripcion) {
+        if (tipo == null || (!tipo.equals("CERTIFICADO") && !tipo.equals("EQUIVALENCIA")
+                && !tipo.equals("REVISION_NOTA") && !tipo.equals("BAJA"))) {
+            System.out.println("Error: tipo de solicitud invalido");
+            return false;
+        }
+        if (prioridad < 1 || prioridad > 3) {
+            System.out.println("Error: la prioridad debe ser 1, 2 o 3");
+            return false;
+        }
+        if (descripcion == null || descripcion.trim().isEmpty()) {
+            System.out.println("Error: la descripcion es obligatoria");
+            return false;
+        }
+        if (descripcion.length() > 200 || descripcion.contains(";")) {
+            System.out.println("Error: la descripcion es demasiado larga o contiene ';'");
+            return false;
+        }
+        return true;
+    }
+
+    private Solicitud crearSolicitud(String nombre, String apellido, String legajo, String email,
+                                     String tipo, int prioridad, String descripcion) {
         Estudiante e = new Estudiante(legajo.trim(), nombre.trim(), apellido.trim(), email.trim());
         ultimoId++;
         Solicitud s = new Solicitud(ultimoId, e, tipo, prioridad, descripcion.trim(),
                 "PENDIENTE", null, LocalDate.now());
         lista.add(s);
+        return s;
+    }
 
-        // guardar en el archivo (se agrega una linea al final)
+    private void agregarAlArchivo(Solicitud s) {
         try {
             FileWriter fw = new FileWriter(archivo, StandardCharsets.UTF_8, true);
             fw.write(s.getId() + ";" + s.getEstudiante().getLegajo() + ";"
@@ -89,9 +111,6 @@ public class SistemaSolicitudes {
             fw.close();
         } catch (Exception ex) {
         }
-
-        System.out.println("Solicitud registrada con id " + s.getId());
-        return s.getId();
     }
 
     // ---------------------------------------------------------------
