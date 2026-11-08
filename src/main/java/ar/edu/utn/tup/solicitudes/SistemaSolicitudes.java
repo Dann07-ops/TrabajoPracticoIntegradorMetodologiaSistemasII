@@ -118,12 +118,7 @@ public class SistemaSolicitudes {
     // Cambiar el estado de una solicitud
     // ---------------------------------------------------------------
     public boolean cambiarEstado(int id, String nuevoEstado) {
-        Solicitud x = null;
-        for (int i = 0; i < lista.size(); i++) {
-            if (lista.get(i).getId() == id) {
-                x = lista.get(i);
-            }
-        }
+        Solicitud x = buscarPorId(id);
         if (x == null) {
             System.out.println("No existe la solicitud " + id);
             return false;
@@ -142,22 +137,12 @@ public class SistemaSolicitudes {
     // Asignar un responsable a una solicitud
     // ---------------------------------------------------------------
     public boolean asignarResponsable(int idSolicitud, int idResponsable) {
-        Solicitud x = null;
-        for (int i = 0; i < lista.size(); i++) {
-            if (lista.get(i).getId() == idSolicitud) {
-                x = lista.get(i);
-            }
-        }
+        Solicitud x = buscarPorId(idSolicitud);
         if (x == null) {
             System.out.println("No existe la solicitud " + idSolicitud);
             return false;
         }
-        Responsable r = null;
-        for (Responsable aux : lista2) {
-            if (aux.id == idResponsable) {
-                r = aux;
-            }
-        }
+        Responsable r = buscarResponsablePorId(idResponsable);
         if (r == null) {
             System.out.println("No existe el responsable " + idResponsable);
             return false;
@@ -181,6 +166,16 @@ public class SistemaSolicitudes {
             }
         }
         return x;
+    }
+
+    private Responsable buscarResponsablePorId(int id) {
+        Responsable r = null;
+        for (Responsable aux : lista2) {
+            if (aux.id == id) {
+                r = aux;
+            }
+        }
+        return r;
     }
 
     // ---------------------------------------------------------------
@@ -269,13 +264,7 @@ public class SistemaSolicitudes {
                 }
                 String[] c = linea.split(";");
                 Estudiante e = new Estudiante(c[1], c[2], c[3], c[4]);
-                Responsable r = null;
-                int idR = Integer.parseInt(c[9]);
-                for (Responsable aux : lista2) {
-                    if (aux.id == idR) {
-                        r = aux;
-                    }
-                }
+                Responsable r = buscarResponsablePorId(Integer.parseInt(c[9]));
                 Solicitud s = new Solicitud(Integer.parseInt(c[0]), e, c[5], Integer.parseInt(c[6]),
                         c[7], c[8], r, LocalDate.parse(c[10]));
                 lista.add(s);
