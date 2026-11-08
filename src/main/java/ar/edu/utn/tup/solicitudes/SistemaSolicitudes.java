@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -225,23 +224,7 @@ public class SistemaSolicitudes {
                 rc++;
             }
 
-            // calcular si esta vencida segun el tipo
-            int dias;
-            if (s.getTipo().equals("CERTIFICADO")) {
-                dias = 5;
-            } else if (s.getTipo().equals("EQUIVALENCIA")) {
-                dias = 30;
-            } else if (s.getTipo().equals("REVISION_NOTA")) {
-                dias = 10;
-            } else {
-                dias = 15;
-            }
-            if (s.getPrioridad() == 1) {
-                dias = dias / 2;
-            }
-            long transcurridos = ChronoUnit.DAYS.between(s.getFechaCreacion(), LocalDate.now());
-            if (!s.getEstado().equals("RESUELTA") && !s.getEstado().equals("RECHAZADA")
-                    && transcurridos > dias) {
+            if (s.estaVencida(LocalDate.now())) {
                 vencidas.add(s);
             }
         }

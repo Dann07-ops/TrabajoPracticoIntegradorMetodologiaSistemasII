@@ -1,6 +1,7 @@
 package ar.edu.utn.tup.solicitudes;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class Solicitud {
 
@@ -88,5 +89,24 @@ public class Solicitud {
 
     public void setFechaCreacion(LocalDate fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
+    }
+
+    public boolean estaVencida(LocalDate hoy) {
+        int dias;
+        if (getTipo().equals("CERTIFICADO")) {
+            dias = 5;
+        } else if (getTipo().equals("EQUIVALENCIA")) {
+            dias = 30;
+        } else if (getTipo().equals("REVISION_NOTA")) {
+            dias = 10;
+        } else {
+            dias = 15;
+        }
+        if (getPrioridad() == 1) {
+            dias = dias / 2;
+        }
+        long transcurridos = ChronoUnit.DAYS.between(getFechaCreacion(), hoy);
+        return !getEstado().equals("RESUELTA") && !getEstado().equals("RECHAZADA")
+                && transcurridos > dias;
     }
 }
