@@ -69,9 +69,7 @@ public class SistemaSolicitudes {
     }
 
     private boolean esSolicitudValida(DatosSolicitud datos) {
-        String tipo = datos.tipo();
-        if (tipo == null || (!tipo.equals("CERTIFICADO") && !tipo.equals("EQUIVALENCIA")
-                && !tipo.equals("REVISION_NOTA") && !tipo.equals("BAJA"))) {
+        if (TipoSolicitud.desdeTexto(datos.tipo()) == null) {
             System.out.println("Error: tipo de solicitud invalido");
             return false;
         }
@@ -95,7 +93,7 @@ public class SistemaSolicitudes {
         Estudiante e = new Estudiante(datos.legajo().trim(), datos.nombre().trim(),
                 datos.apellido().trim(), datos.email().trim());
         ultimoId++;
-        Solicitud s = new Solicitud(ultimoId, e, datos.tipo(), datos.prioridad(),
+        Solicitud s = new Solicitud(ultimoId, e, TipoSolicitud.desdeTexto(datos.tipo()), datos.prioridad(),
                 datos.descripcion().trim(), "PENDIENTE", null, LocalDate.now());
         lista.add(s);
         return s;
@@ -185,7 +183,7 @@ public class SistemaSolicitudes {
         List<Solicitud> res = new ArrayList<>();
         for (Solicitud s : lista) {
             boolean flag = true;
-            if (t != null && !t.isEmpty() && !s.getTipo().equals(t)) {
+            if (t != null && !t.isEmpty() && !s.getTipo().name().equals(t)) {
                 flag = false;
             }
             if (e != null && !e.isEmpty() && !s.getEstado().equals(e)) {
@@ -265,7 +263,7 @@ public class SistemaSolicitudes {
                 String[] c = linea.split(";");
                 Estudiante e = new Estudiante(c[1], c[2], c[3], c[4]);
                 Responsable r = buscarResponsablePorId(Integer.parseInt(c[9]));
-                Solicitud s = new Solicitud(Integer.parseInt(c[0]), e, c[5], Integer.parseInt(c[6]),
+                Solicitud s = new Solicitud(Integer.parseInt(c[0]), e, TipoSolicitud.valueOf(c[5]), Integer.parseInt(c[6]),
                         c[7], c[8], r, LocalDate.parse(c[10]));
                 lista.add(s);
                 if (s.getId() > ultimoId) {

@@ -7,14 +7,14 @@ public class Solicitud {
 
     private int id;
     private Estudiante estudiante;
-    private String tipo;      // "CERTIFICADO", "EQUIVALENCIA", "REVISION_NOTA", "BAJA"
+    private TipoSolicitud tipo;
     private int prioridad;    // 1 = alta, 2 = media, 3 = baja
     private String descripcion;
     private String estado;    // "PENDIENTE", "EN_PROCESO", "RESUELTA", "RECHAZADA"
     private Responsable responsable;
     private LocalDate fechaCreacion;
 
-    public Solicitud(int id, Estudiante estudiante, String tipo, int prioridad,
+    public Solicitud(int id, Estudiante estudiante, TipoSolicitud tipo, int prioridad,
                      String descripcion, String estado, Responsable responsable,
                      LocalDate fechaCreacion) {
         this.id = id;
@@ -43,11 +43,11 @@ public class Solicitud {
         this.estudiante = estudiante;
     }
 
-    public String getTipo() {
+    public TipoSolicitud getTipo() {
         return tipo;
     }
 
-    public void setTipo(String tipo) {
+    public void setTipo(TipoSolicitud tipo) {
         this.tipo = tipo;
     }
 
@@ -92,16 +92,7 @@ public class Solicitud {
     }
 
     public boolean estaVencida(LocalDate hoy) {
-        int dias;
-        if (getTipo().equals("CERTIFICADO")) {
-            dias = 5;
-        } else if (getTipo().equals("EQUIVALENCIA")) {
-            dias = 30;
-        } else if (getTipo().equals("REVISION_NOTA")) {
-            dias = 10;
-        } else {
-            dias = 15;
-        }
+        int dias = getTipo().getDiasDePlazo();
         if (getPrioridad() == 1) {
             dias = dias / 2;
         }
