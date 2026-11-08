@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -41,7 +42,11 @@ public class SistemaSolicitudes {
         }
 
         Solicitud s = crearSolicitud(datos);
-        agregarAlArchivo(s);
+        if (!agregarAlArchivo(s)) {
+            lista.remove(s);
+            ultimoId--;
+            return -1;
+        }
 
         System.out.println("Solicitud registrada con id " + s.getId());
         return s.getId();
@@ -99,16 +104,17 @@ public class SistemaSolicitudes {
         return s;
     }
 
-    private void agregarAlArchivo(Solicitud s) {
-        try {
-            FileWriter fw = new FileWriter(archivo, StandardCharsets.UTF_8, true);
+    private boolean agregarAlArchivo(Solicitud s) {
+        try (FileWriter fw = new FileWriter(archivo, StandardCharsets.UTF_8, true)) {
             fw.write(s.getId() + ";" + s.getEstudiante().getLegajo() + ";"
                     + s.getEstudiante().getNombre() + ";" + s.getEstudiante().getApellido() + ";"
                     + s.getEstudiante().getEmail() + ";" + s.getTipo() + ";" + s.getPrioridad() + ";"
                     + s.getDescripcion() + ";" + s.getEstado() + ";" + 0 + ";"
                     + s.getFechaCreacion() + "\n");
-            fw.close();
-        } catch (Exception ex) {
+            return true;
+        } catch (IOException ex) {
+            System.out.println("Error: no se pudo guardar la solicitud (" + ex.getMessage() + ")");
+            return false;
         }
     }
 
@@ -272,6 +278,7 @@ public class SistemaSolicitudes {
             }
             br.close();
         } catch (Exception ex) {
+            System.out.println("Error: no se pudo leer el archivo " + archivo + " (" + ex.getMessage() + ")");
         }
     }
 

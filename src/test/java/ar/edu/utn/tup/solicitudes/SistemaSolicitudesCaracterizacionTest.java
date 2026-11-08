@@ -147,16 +147,17 @@ class SistemaSolicitudesCaracterizacionTest {
     }
 
     @Test
-    @DisplayName("CARACTERIZA DEFECTO: si no se puede escribir el archivo, informa exito igual y el dato no se guarda")
-    void falloDeEscrituraSilencioso() {
+    @DisplayName("CORREGIDO (S01): si no se puede escribir el archivo, informa el error y no registra la solicitud")
+    void falloDeEscrituraSeInforma() {
         String rutaImposible = carpeta.resolve("no-existe").resolve("solicitudes.csv").toString();
         SistemaSolicitudes conRutaImposible = new SistemaSolicitudes(rutaImposible);
 
         int id = conRutaImposible.registrarSolicitud(
                 new DatosSolicitud("Ana", "Perez", "90001", "ana.perez@mail.test", "CERTIFICADO", 2, "desc"));
 
-        assertEquals(1, id);                               // anuncia exito...
-        assertFalse(Files.exists(Path.of(rutaImposible))); // ...pero no guardo nada
+        assertEquals(-1, id);                                 // informa el fallo
+        assertEquals(0, conRutaImposible.getLista().size());  // no queda registrada en memoria
+        assertFalse(Files.exists(Path.of(rutaImposible)));
     }
 
     // =================================================================
